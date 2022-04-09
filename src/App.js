@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+// import logo from './logo.svg';
+// import "./App.css";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import "upkit/dist/style.min.css";
+
+import { Provider } from "react-redux";
+import store from "./app/store";
+
+import Home from "./pages/Home";
+// (1) import fungsi listen
+
+import { listen } from "./app/listener";
+import React from "react";
+
+import Register from "./pages/Register";
+import RegisterSuccess from "./pages/RegisterSuccess";
+import Login from "./pages/Login";
 
 function App() {
+  // (2) panggil fungsi listen() sekali saja saat komponen selesai render pertama kali
+  React.useEffect(() => {
+    listen();
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <div>
+        <Router>
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+
+            <Route
+              path="/register/berhasil"
+              component={RegisterSuccess}
+            ></Route>
+
+            <Route path="/register" component={Register}></Route>
+
+            <Route path="/" component={Home} />
+          </Switch>
+        </Router>
+      </div>
+    </Provider>
   );
 }
 
