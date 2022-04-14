@@ -59,8 +59,10 @@ export const fetchProducts = () => {
       // (2) ubah `getProducts` menjadi `debouncedFetchProducts`
       let {
         data: { data, count },
-      } = await debouncedFetchProducts({});
+      } = await debouncedFetchProducts(params);
       dispatch(successFetchingProducts({ data, count }));
+      console.log("data produk: ", data);
+      console.log("data params: ", params);
     } catch (err) {
       // jika terjadi `error`
       dispatch(errorFetchingProducts());
@@ -82,7 +84,7 @@ export const setKeyword = (keyword) => {
   };
 };
 
-export const SetCategory = (category) => {
+export const setCategory = (category) => {
   return {
     type: SET_CATEGORY,
     category,

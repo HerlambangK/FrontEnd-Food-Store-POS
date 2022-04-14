@@ -9,6 +9,8 @@ import store from "./app/store";
 import Home from "./pages/Home";
 // (1) import fungsi listen
 
+import { getCart } from "./api/cart";
+
 import { listen } from "./app/listener";
 import React from "react";
 
@@ -20,6 +22,7 @@ function App() {
   // (2) panggil fungsi listen() sekali saja saat komponen selesai render pertama kali
   React.useEffect(() => {
     listen();
+    getCart();
   }, []);
   return (
     <Provider store={store}>

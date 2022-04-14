@@ -8,10 +8,10 @@ import {
   LayoutOne,
 } from "upkit";
 import { useForm } from "react-hook-form";
-import { useHistory, Redirect, Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import StoreLogo from "../../components/StoreLogo";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userLogin } from "../../features/Auth/actions";
 import { rules } from "./validation";
 import { login } from "../../api/auth";

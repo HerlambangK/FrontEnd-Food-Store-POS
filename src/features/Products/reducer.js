@@ -19,7 +19,7 @@ const statuslist = {
 };
 
 const initialState = {
-  dara: [],
+  data: [],
   currentPage: 1,
   totalItems: -1,
   perPage: 6,
@@ -31,22 +31,19 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    //   penanganngan 'start fetching product'
     case START_FETCHING_PRODUCT:
-      return { ...state, status: statuslist.process };
+      return { ...state, status: statuslist.process, data: [] };
 
-    // tangani `ERROR_FETCHING_PRODUCT`
-    case ERROR_FETCHING_PRODUCT:
-      return { ...state, status: statuslist.error };
-
-    // tangani `SUCCESS_FETCHING_PRODUCT`
     case SUCCESS_FETCHING_PRODUCT:
       return {
         ...state,
-        status: statuslist.success,
         data: action.data,
         totalItems: action.count,
+        status: statuslist.success,
       };
+
+    case ERROR_FETCHING_PRODUCT:
+      return { ...state, status: statuslist.error };
 
     case SET_PAGE:
       return { ...state, currentPage: action.currentPage };
@@ -64,10 +61,7 @@ export default function reducer(state = initialState, action) {
       };
 
     case SET_TAGS:
-      return {
-        ...state,
-        tags: action.tags,
-      };
+      return { ...state, tags: action.tags };
 
     case TOGGLE_TAG:
       if (!state.tags.includes(action.tag)) {

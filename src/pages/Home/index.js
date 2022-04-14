@@ -18,22 +18,26 @@ import {
   goToNextPage,
   goToPrevPage,
   setKeyword,
-  SetCategory,
+  setCategory,
   toggleTag,
 } from "../../features/Products/actions";
+import Cart from "../../components/Cart";
 
 import BounceLoader from "react-spinners/BounceLoader";
-
 import { tags } from "./tags";
+import { addItem, removeItem } from "../../features/Cart/action";
 
 // (1) import `useDispatch` dan `useSelector`
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 export default function Home() {
   let dispatch = useDispatch();
 
   // (2) baca state `products` dari Redux store
   let products = useSelector((state) => state.products);
+  let cart = useSelector((state) => state.cart);
+  let history = useHistory();
 
   React.useEffect(() => {
     dispatch(fetchProducts());
@@ -52,7 +56,7 @@ export default function Home() {
             items={menus}
             verticalAlign="top"
             active={products.category}
-            onChange={(category) => dispatch(SetCategory(category))}
+            onChange={(category) => dispatch(setCategory(category))}
           />
         }
         content={
@@ -91,14 +95,14 @@ export default function Home() {
               ) : null}
 
               <Responsive desktop={3} items="stretch">
-                {products?.data?.map((product, index) => {
+                {products.data.map((product, index) => {
                   return (
                     <div key={index} className="p-2">
                       <CardProduct
                         title={product.name}
                         imgUrl={`${config.api_host}/upload/${product.image_url}`}
                         price={product.price}
-                        onAddToCart={(_) => null}
+                        onAddToCart={(_) => dispatch(addItem(product))}
                       />
                     </div>
                   );
@@ -118,7 +122,13 @@ export default function Home() {
             </div>
 
             <div className="w-full md:w-1/4 h-full shadow-lg border-r border-white bg-gray-100">
-              Keranjang Belanja disini
+              {/*Keranjang Belanja disini</h2> */}
+              <Cart
+                items={cart}
+                onItemInc={(item) => dispatch(addItem(item))}
+                onItemDec={(item) => dispatch(removeItem(item))}
+                onCheckout={(_) => history.push("/checkout")}
+              />
             </div>
           </div>
         }
