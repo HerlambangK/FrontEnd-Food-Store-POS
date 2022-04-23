@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import RegisterSuccess from "./pages/RegisterSuccess";
 import Login from "./pages/Login";
 import UserAddressAdd from "./pages/UserAddressAdd";
+import UserAddress from "./pages/UserAddress";
 
 function App() {
   // (2) panggil fungsi listen() sekali saja saat komponen selesai render pertama kali
@@ -32,6 +33,10 @@ function App() {
           <Switch>
             <Route path="/alamat-pengiriman/tambah">
               <UserAddressAdd />
+            </Route>
+
+            <Route path="/alamat-pengiriman">
+              <UserAddress />
             </Route>
 
             <Route path="/login">
