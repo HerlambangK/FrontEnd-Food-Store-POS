@@ -9,13 +9,20 @@ import FaArrowRight from "@meronex/icons/fa/FaArrowRight";
 import FaArrowLeft from "@meronex/icons/fa/FaArrowLeft";
 import FaRegCheckCircle from "@meronex/icons/fa/FaRegCheckCircle";
 
-import { useSelector } from "react-redux";
 import { config } from "../../config";
 import { formatRupiah } from "../../utils/format-rupiah";
 import { sumPrice } from "../../utils/sum-price";
 
 import { useAddressData } from "../../hooks/address";
 import { Link } from "react-router-dom";
+
+import { createOrder } from "../../api/order";
+import { useHistory, Redirect } from "react-router-dom";
+
+// (1) import `useDispatch`
+import { useSelector, useDispatch } from "react-redux";
+// (2) import `clearItems`
+import { clearItems } from "../../features/Cart/action";
 
 const IconWrapper = ({ children }) => {
   return <div className="text-3xl flex justify-center">{children}</div>;
@@ -106,6 +113,33 @@ export default function Checkout() {
   let cart = useSelector((state) => state.cart);
 
   let { data, status, limit, page, count, setPage } = useAddressData();
+
+  let dispatch = useDispatch();
+
+  // (s) buat objek `history` di atas fungsi `handleCreateOrder` di dalam fungsi `Checkout`
+  let history = useHistory();
+
+  async function handleCreateOrder() {
+    let payload = {
+      delivery_fee: config.global_ongkir,
+      delivery_address: selectedAddress._id,
+    };
+    // () kirimkan `payload` ke Web API untuk membuat order baru
+    let { data } = await createOrder(payload);
+
+    // () hentikan operasi jika terjadi error
+    if (data?.error) return;
+
+    // () redirect ke halaman invoice
+    history.push(`/invoice/${data._id}`);
+
+    // () hapus semua item di keranjang belanja
+    dispatch(clearItems());
+  }
+
+  if (!cart.length) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <LayoutOne>
@@ -245,6 +279,7 @@ export default function Checkout() {
             </div>
             <div className="text-right">
               <Button
+                onClick={handleCreateOrder}
                 color="red"
                 size="large"
                 iconBefore={<FaRegCheckCircle />}
