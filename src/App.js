@@ -22,6 +22,7 @@ import UserAddress from "./pages/UserAddress";
 import Checkout from "./pages/Checkout";
 import Invoice from "./pages/Invoice";
 import UserAccount from "./pages/UserAccount";
+import UserOrders from "./pages/UserOrders";
 
 function App() {
   // (2) panggil fungsi listen() sekali saja saat komponen selesai render pertama kali
@@ -34,6 +35,10 @@ function App() {
       <div>
         <Router>
           <Switch>
+            <Route path="/pesanan">
+              <UserOrders />
+            </Route>
+
             <Route path="/account">
               <UserAccount />
             </Route>
