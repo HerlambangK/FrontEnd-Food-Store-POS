@@ -8,27 +8,22 @@ import { ButtonCircle, Responsive } from "upkit";
 import { Link } from "react-router-dom";
 
 export default function TopBar() {
-  // dapatkan state 'auth'
   let auth = useSelector((state) => state.auth);
 
   return (
-    <>
-      <Responsive desktop={2} justify="between" items="center">
-        <div>
-          <StoreLogo />
-        </div>
+    <Responsive desktop={2} justify="between" items="center">
+      <div>
+        <StoreLogo />
+      </div>
 
-        <div className="mr-5 text-right">
-          {/* Link */}
-          <Link to={auth?.user ? "/account" : "/login"}>
-            <div className="mr-2 inline-block text-red-600 font-bold">
-              {auth?.user?.full_name}
-            </div>
-            {/* penggunaan komponen ikon */}
-            <ButtonCircle icon={<FaUser />} />
-          </Link>
-        </div>
-      </Responsive>
-    </>
+      <div className="mr-5 text-right" style={{ textAlign: "Right" }}>
+        <Link to={auth.user ? "/account" : "/login"}>
+          <div className="mr-2 inline-block text-red-600 font-bold">
+            {auth?.user?.full_name}
+          </div>
+          <ButtonCircle icon={<FaUser />} />
+        </Link>
+      </div>
+    </Responsive>
   );
 }

@@ -19,6 +19,7 @@ import RegisterSuccess from "./pages/RegisterSuccess";
 import Login from "./pages/Login";
 import UserAddressAdd from "./pages/UserAddressAdd";
 import UserAddress from "./pages/UserAddress";
+import Checkout from "./pages/Checkout";
 
 function App() {
   // (2) panggil fungsi listen() sekali saja saat komponen selesai render pertama kali
@@ -31,6 +32,10 @@ function App() {
       <div>
         <Router>
           <Switch>
+            <Route path="/checkout">
+              <Checkout />
+            </Route>
+
             <Route path="/alamat-pengiriman/tambah">
               <UserAddressAdd />
             </Route>
