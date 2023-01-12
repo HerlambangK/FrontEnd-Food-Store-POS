@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useRouteMatch } from "react-router-dom";
-import { LayoutOne, Text, Table } from "upkit";
+import { LayoutOne, Text, Table, Button } from "upkit";
 import BounceLoader from "react-spinners/BounceLoader";
 
 import TopBar from "../../components/TopBar";
@@ -8,12 +8,15 @@ import StatusLabel from "../../components/StatusLabel";
 import { config } from "../../config";
 import { formatRupiah } from "../../utils/format-rupiah";
 import { getInvoiceByOrderId } from "../../api/invoice";
+import Axios from "axios";
 
 export default function Invoice() {
   let { params } = useRouteMatch();
   let [invoice, setInvoice] = React.useState(null);
   let [error, setError] = React.useState("");
   let [status, setStatus] = React.useState("process");
+  let [initiatingPayment, setInitiating] = React.useState(false);
+  let [requestError, setRequestError] = React.useState(false);
 
   React.useState(() => {
     getInvoiceByOrderId(params?.order_id)
@@ -49,6 +52,23 @@ export default function Invoice() {
     );
   }
 
+  let handlePayment = async function () {
+    setInitiating(true);
+
+    let {
+      data: { token },
+    } = await Axios.get(
+      `${config.api_host}/api/invoices/${params?.order_id}/initiate-payment`
+    );
+
+    if (!token) {
+      setRequestError(true);
+      return;
+    }
+
+    setInitiating(false);
+    window.snap.pay(token);
+  };
   return (
     <LayoutOne>
       <TopBar />
@@ -85,7 +105,27 @@ export default function Invoice() {
                 {config.owner} <br />
                 {config.contact} <br />
                 {config.billing.account_no} <br />
-                {config.billing.bank_name}
+                {config.billing.bank_name} <br />
+                {invoice.payment_status !== "paid" ? (
+                  <>
+                    <Button
+                      onClick={handlePayment}
+                      disabled={initiatingPayment}
+                    >
+                      {" "}
+                      {initiatingPayment
+                        ? "Loading ... "
+                        : "Bayar dengan Midtrans"}{" "}
+                    </Button>
+                  </>
+                ) : null}
+                {requestError ? (
+                  <>
+                    <div className="text-red-400">
+                      Terjadi kesalahan saat meminta token untuk pembayaran.
+                    </div>
+                  </>
+                ) : null}
               </div>
             ),
           },
